@@ -16,6 +16,10 @@ cc.Class({
             default:null,
             type:cc.Prefab
         },
+        AddUI:{
+            default:null,
+            type:cc.Prefab
+        },
         homeBtn:{
             default:null,
             type:cc.Button
@@ -92,6 +96,7 @@ cc.Class({
             case "5":
                 this.AddBtn.interactable = false;
                 this.currentBtn = this.AddBtn;
+                this.currentShowHud = cc.instantiate(this.AddUI);
             break;
         }
 
@@ -101,7 +106,6 @@ cc.Class({
     },
 
     pressHomeUI: function (event, index) {
-        cc.log(111111);
         if(!event.target)return;
 
 
