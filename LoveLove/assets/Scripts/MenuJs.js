@@ -20,6 +20,10 @@ cc.Class({
             default:null,
             type:cc.Prefab
         },
+        CalcuUI:{
+            default:null,
+            type:cc.Prefab
+        },
         homeBtn:{
             default:null,
             type:cc.Button
@@ -40,13 +44,6 @@ cc.Class({
             default:null,
             type:cc.Button
         }
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
         // bar: {
         //     get () {
         //         return this._bar;
@@ -78,6 +75,7 @@ cc.Class({
             case "2":
                 this.CalcuBtn.interactable = false;
                 this.currentBtn = this.CalcuBtn;
+                this.currentShowHud = cc.instantiate(this.CalcuUI);
             break;
 
 
