@@ -27,12 +27,15 @@ cc.Class({
         //         this._bar = value;
         //     }
         // },
-    },
 
+        
+    },
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
         log("=============================================")
+        this.reset();
+        this.fuckStart = false;
         this.startCalcu();
     },
 
@@ -56,13 +59,13 @@ cc.Class({
         var accelY = event.acc.y;
         var accelZ = event.acc.z;
         //
-        this.deltaX = abs(this.prevX - accelX);
-        this.deltaY = abs(this.prevY - accelY);
-        this.deltaZ = abs(this.prevZ - accelZ);
+        this.deltaX = Math.abs(this.prevX - accelX);
+        this.deltaY = Math.abs(this.prevY - accelY);
+        this.deltaZ = Math.abs(this.prevZ - accelZ);
         //
-        this.totalX += deltaX;
-        this.totalY += deltaY;
-        this.totalZ += deltaZ;
+        this.totalX += this.deltaX;
+        this.totalY += this.deltaY;
+        this.totalZ += this.deltaZ;
         //
         this.totalValueX.push(this.deltaX);
         this.totalValueY.push(this.deltaY);
@@ -78,26 +81,26 @@ cc.Class({
         	//超过 this.averageValue 后开始记录
         	if(++this.count > this.averageValue)
         	{
-        		this.averageX = totalX/averageValue;
-        		this.averageY = totalY/averageValue;
-        		this.averageZ = totalZ/averageValue;
+        		this.averageX = this.totalX/this.averageValue;
+        		this.averageY = this.totalY/this.averageValue;
+        		this.averageZ = this.totalZ/this.averageValue;
         		//
-        		averageTotal = averageX + averageY + averageZ;
+        		this.averageTotal = this.averageX + this.averageY + this.averageZ;
         		//
-        		if(this.maxPower < averageTotal)
+        		if(this.maxPower < this.averageTotal)
         		{
-        			this.maxPower = averageTotal;
+        			this.maxPower = this.averageTotal;
         		}
         		//（可以不要）
         		this.count--;
         		//--------------
-        		totalX -= totalValueX[0];
-        		totalY -= totalValueY[0];
-        		totalZ -= totalValueZ[0];
+        		this.totalX -= this.totalValueX[0];
+        		this.totalY -= this.totalValueY[0];
+        		this.totalZ -= this.totalValueZ[0];
         		//
-        		totalValueX.splice(0, 1);
-        		totalValueY.splice(0, 1);
-        		totalValueZ.splice(0, 1);
+        		this.totalValueX.splice(0, 1);
+        		this.totalValueY.splice(0, 1);
+        		this.totalValueZ.splice(0, 1);
         	}
 
 
@@ -127,7 +130,7 @@ cc.Class({
         this.prevY = accelX;
         this.prevZ = accelX;
         //
-        log("totalX:" + totalX + "totalY" + totalY + "totalZ" + totalZ);
+        log("totalX:" + this.totalX + "totalY" + this.totalY + "totalZ" + this.totalZ);
     },
 
 
@@ -138,12 +141,16 @@ cc.Class({
         cc.systemEvent.setAccelerometerEnabled(false);
         this.stopCalcu();
     },
-
     //
     reset() {
-    	this.maxPower = 0;
+        this.maxPower = 0;
     	this.averageValue = 100;
     	this.count = 0;
+
+        //
+        this.deltaX = 0;
+        this.deltaY = 0;
+        this.deltaZ = 0;
         this.prevX = 0;
         this.prevY = 0;
         this.prevZ = 0;
@@ -163,11 +170,10 @@ cc.Class({
         this.totalPower = [];
         this.fuckContinueFrame = 0;
         this.continueCountToEnd = 0;
+        log("2222222222222this.prevX " + this.prevX + " this.deltaX" +  this.deltaX )
     },
     //
     start () {
-        this.reset();
-        this.fuckStart = false;
     },
 
     // update (dt) {},
