@@ -42,6 +42,9 @@ cc.Class({
         this.node.getChildByName('1').getComponent(cc.Label).string = num;
         this.node.getChildByName('hasData').active = false;
 
+        this.dayIndex = num;
+        this.isThisMonth = isThisMonth;
+        //
         if(type == 1)
         {
             this.node.getChildByName('hasData').active = true;
@@ -60,6 +63,10 @@ cc.Class({
         {
             this.node.getChildByName('1').color = new cc.Color(155,155,155);
         }
+    },
+    pressMe:function()
+    {
+        this.MAIN.pressOnDay( this.dayIndex, this.isThisMonth );
     }
     // update (dt) {},
 });

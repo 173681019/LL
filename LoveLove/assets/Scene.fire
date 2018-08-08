@@ -1448,7 +1448,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 172
+      "y": 197
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -1459,7 +1459,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "rili-1",
+    "_name": "bg",
     "_objFlags": 0,
     "_parent": {
       "__id__": 35

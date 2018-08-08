@@ -34,11 +34,11 @@
         "__id__": 12
       },
       {
-        "__id__": 13
+        "__id__": 14
       }
     ],
     "_prefab": {
-      "__id__": 14
+      "__id__": 15
     },
     "_id": "",
     "_opacity": 255,
@@ -395,7 +395,9 @@
     "duration": 0.1,
     "zoomScale": 1.2,
     "clickEvents": [
-      null
+      {
+        "__id__": 13
+      }
     ],
     "_N$interactable": true,
     "_N$enableAutoGrayEffect": false,
@@ -422,6 +424,15 @@
     "_N$target": {
       "__id__": 1
     }
+  },
+  {
+    "__type__": "cc.ClickEvent",
+    "target": {
+      "__id__": 1
+    },
+    "component": "DayButton",
+    "handler": "pressMe",
+    "customEventData": ""
   },
   {
     "__type__": "a8739n0tpdLa44GPVi/m1bW",

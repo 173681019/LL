@@ -37,6 +37,12 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
      onLoad () {
+
+        this.node.getChildByName(`bg`).active = false;
+
+
+
+
     	var date = new Date()
         var newyear = date.getFullYear();
         var newmonth = date.getMonth();
@@ -139,6 +145,7 @@ cc.Class({
         day.setPosition( p );
 
         day.getComponent("DayButton").SetProperty(type, num, isThisMonth, isToady);
+        day.getComponent("DayButton").MAIN = this;
 
     },
 
@@ -160,7 +167,7 @@ cc.Class({
 
 
     pressOnDay: function (event, index) {
-    	
+    	cc.log(event, index);
     },
 
     start () {
