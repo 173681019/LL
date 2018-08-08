@@ -12,6 +12,11 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+
+        Day:{
+            default:null,
+            type:cc.Prefab
+        },
         // foo: {
         //     // ATTRIBUTES:
         //     default: null,        // The default value will be used only when the component attaching
@@ -45,9 +50,6 @@ cc.Class({
         
 
 
-                cc.log("currentDay", currentDay, "firstDay:", firstDay);
-
-
 
         var lastMonth = (newmonth - 1) >= 0 ? (newmonth - 1) : 12;
         
@@ -58,25 +60,31 @@ cc.Class({
         var lastDay = this.getMonthsDay(newyear, lastMonth);
         var newlastDay = lastDay;
         for(var i = firstDay; i >= 1; i--) {
-            this.node.getChildByName('days').getChildByName(`button${i}`).getChildByName(`1`).color = new cc.Color(155,155,155);
-          	this.node.getChildByName('days').getChildByName(`button${i}`).getChildByName(`1`).getComponent(cc.Label).string = newlastDay--;
+            var _node = this.node.getChildByName('days').getChildByName(`button${i}`);
+           // _node.getChildByName(`1`).color = new cc.Color(155,155,155);
+          	//_node.getChildByName(`1`).getComponent(cc.Label).string = newlastDay--;
+
+
+
+            this.addOneDay( cc.p(80*i-330, 60), 0, newlastDay--, false, false )
         }
 
 
 		var newCurrentDay = 1;
         for (var i = firstDay+1; i <= 7; i++) {
-            if (newCurrentDay == newday) {
-                this.node.getChildByName('days').getChildByName(`button${i}`).getChildByName(`1`).color = new cc.Color(65,205,225);
-            }
-            this.node.getChildByName('days').getChildByName(`button${i}`).getChildByName(`1`).getComponent(cc.Label).string = newCurrentDay++;
+            var _node = this.node.getChildByName('days').getChildByName(`button${i}`);
+            var isToday = newCurrentDay == newday;
+            this.addOneDay( cc.p(80*i-330, 60), 1, newCurrentDay++, true, isToday )
+            //if (newCurrentDay == newday) {
+             //   _node.getChildByName(`1`).color = new cc.Color(65,205,225);
+           // }
+           // _node.getChildByName(`1`).getComponent(cc.Label).string = newCurrentDay++;
         }
 
         var num = 0;
         var number = 0;
 
 
-        cc.log("newCurrentDay", newCurrentDay);
-        cc.log("currentDay", currentDay);
 
         for(var i = newCurrentDay; i <= currentDay; i++) {
             if ((i - newCurrentDay) % 7 === 0) {
@@ -87,10 +95,17 @@ cc.Class({
             number++;
 
             var idx = number + num*7;
-            if (i == newday) {
-                this.node.getChildByName('days').getChildByName(`button${idx}`).getChildByName(`1`).color = new cc.Color(65,205,225);
-            }
-             this.node.getChildByName('days').getChildByName(`button${idx}`).getChildByName(`1`).getComponent(cc.Label).string = i;
+            var _node = this.node.getChildByName('days').getChildByName(`button${idx}`);
+
+
+            this.addOneDay( cc.p(80*number-330, 65 - num * 75 ), 0, i, true, i == newday )
+
+           // if (i == newday) {
+              //  _node.getChildByName(`1`).color = new cc.Color(65,205,225);
+
+			
+          //  }
+           // _node.getChildByName(`1`).getComponent(cc.Label).string = i;
         }
 
 
@@ -99,17 +114,50 @@ cc.Class({
 
 
             for (var i = number; i <=6; i++) {
-            	var idx = number + num*7 + 1;
-                this.node.getChildByName(`days`).getChildByName(`button${idx}`).getChildByName(`1`).color = new cc.Color(155,155,155);
-                this.node.getChildByName(`days`).getChildByName(`button${idx}`).getChildByName(`1`).getComponent(cc.Label).string = index++;
+            	//var idx = number + num*7 + 1;
+           	 	//var _node = this.node.getChildByName('days').getChildByName(`button${idx}`);
+                //_node.getChildByName(`1`).color = new cc.Color(155,155,155);
+                //_node.getChildByName(`1`).getComponent(cc.Label).string = index++;
+
             	number++;
+                this.addOneDay( cc.p(80*number-330, -235 ), 0, index++, false )
                 
             }
         }
 
 
 
+
     },
+    addOneDay:function(p, type, num, isThisMonth, isToady = false)
+    {
+    	// 使用给定的模板在场景中生成一个新节点
+        var day = cc.instantiate(this.Day);
+        // 将新增的节点添加到 Canvas 节点下面
+        this.node.addChild(day);
+        // 为星星设置一个随机位置
+        day.setPosition( p );
+
+        day.getComponent("DayButton").SetProperty(type, num, isThisMonth, isToady);
+
+    },
+
+    addImage:function(_path, _parent)
+    {
+ 
+		cc.loader.loadRes(_path, cc.SpriteFrame,function(err,spriteFrame){  
+  
+        //创建一个新的节点，因为cc.Sprite是组件不能直接挂载到节点上，只能添加到为节点的一个组件  
+        var node=new cc.Node('myNode')  
+        //调用新建的node的addComponent函数，会返回一个sprite的对象  
+        const sprite=node.addComponent(cc.Sprite)  
+        //给sprite的spriteFrame属性 赋值  
+        sprite.spriteFrame=spriteFrame 
+        _parent.addChild(node)   })  
+
+    },
+
+
 
     pressOnDay: function (event, index) {
     	

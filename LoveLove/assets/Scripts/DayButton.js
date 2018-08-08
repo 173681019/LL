@@ -31,16 +31,35 @@ cc.Class({
 
     // LIFE-CYCLE CALLBACKS:
 
-   removeMe(){
-         this.node.destroy();
-    },
-         
-    onLoad () {
-    },
+    // onLoad () {},
 
     start () {
 
     },
+    //
+    SetProperty:function(type, num, isThisMonth, isToday)
+    {
+        this.node.getChildByName('1').getComponent(cc.Label).string = num;
+        this.node.getChildByName('hasData').active = false;
 
+        if(type == 1)
+        {
+            this.node.getChildByName('hasData').active = true;
+        }
+
+        if(isToday)
+        {
+            this.node.getChildByName('today').visible = true;
+        }
+        else
+        {
+            this.node.getChildByName('today').active = false;
+        }
+        //
+        if(!isThisMonth)
+        {
+            this.node.getChildByName('1').color = new cc.Color(155,155,155);
+        }
+    }
     // update (dt) {},
 });
