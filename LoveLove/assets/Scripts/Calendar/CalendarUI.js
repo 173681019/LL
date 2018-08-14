@@ -17,6 +17,10 @@ cc.Class({
             default:null,
             type:cc.Prefab
         },
+        DaysArr:{//定义一个数组
+            default:[],
+            type:[cc.Prefab]
+        },
         // foo: {
         //     // ATTRIBUTES:
         //     default: null,        // The default value will be used only when the component attaching
@@ -38,32 +42,78 @@ cc.Class({
 
      onLoad () {
 
-        this.node.getChildByName(`bg`).active = false;
 
 
 
 
     	var date = new Date()
-        var newyear = date.getFullYear();
-        var newmonth = date.getMonth();
+        this.currentYear = date.getFullYear();
+        this.currentMonth = date.getMonth();
         var newday = date.getDate();
 
-        // 获取这月有多少天
-        var currentDay = this.getMonthsDay(newyear, newmonth);
+        this.initBoard(this.currentYear, this.currentMonth, newday);
+
+
+
+
+    },
+    //
+    showBg:function(show)
+    {
+        this.node.getChildByName(`bg`).active = false;
+    },
+
+    removeCurrent:function()
+    {
+    	cc.log("this.DaysArr:", this.DaysArr);
+    	var len = this.DaysArr.length;
+    	for(var i = len-1; i >=0; i--)
+    	{
+    		this.DaysArr[i].destroy();
+    	}
+    	this.DaysArr = [];
+    //	this.node.getChildByName("days").removeAll();
+    },
+
+    pressPrevOrNextMonth:function(event, prev)
+    {
+    	this.removeCurrent();
+    	if(prev==1){
+    		this.currentMonth--;
+    	}else{
+    		this.currentMonth++;
+    	}
+
+    	var date = new Date()
+    	if(this.currentMonth == date.getMonth())
+    	{
+    		this.initBoard(this.currentYear, this.currentMonth, date.getDate());
+    	}
+    	else
+    	{
+    		this.initBoard(this.currentYear, this.currentMonth, 999);
+    	}
+    },
+
+
+    initBoard:function( NOW_YEAR, NOW_MONTH, NOW_DAY )
+    {
+    	// 获取这月有多少天
+        var currentDay = this.getMonthsDay( NOW_YEAR, NOW_MONTH );
 
         // 获取当月第一天星期几
-        var firstDay = this.getMonthFirst(newyear, newmonth);
+        var firstDay = this.getMonthFirst( NOW_YEAR, NOW_MONTH );
         
 
 
 
-        var lastMonth = (newmonth - 1) >= 0 ? (newmonth - 1) : 12;
+        var lastMonth = (NOW_MONTH - 1) >= 0 ? (NOW_MONTH - 1) : 12;
         
-        this.node.getChildByName(`year`).getComponent(cc.Label).string = newyear;
-        this.node.getChildByName(`month`).getComponent(cc.Label).string = (newmonth + 1) + " 月";
+        this.node.getChildByName(`year`).getComponent(cc.Label).string = NOW_YEAR;
+        this.node.getChildByName(`month`).getComponent(cc.Label).string = (NOW_MONTH + 1) + " 月";
 
 
-        var lastDay = this.getMonthsDay(newyear, lastMonth);
+        var lastDay = this.getMonthsDay(NOW_YEAR, lastMonth);
         var newlastDay = lastDay;
         for(var i = firstDay; i >= 1; i--) {
             var _node = this.node.getChildByName('days').getChildByName(`button${i}`);
@@ -79,7 +129,7 @@ cc.Class({
 		var newCurrentDay = 1;
         for (var i = firstDay+1; i <= 7; i++) {
             var _node = this.node.getChildByName('days').getChildByName(`button${i}`);
-            var isToday = newCurrentDay == newday;
+            var isToday = newCurrentDay == NOW_DAY;
             this.addOneDay( cc.p(80*i-330, 60), 1, newCurrentDay++, true, isToday )
             //if (newCurrentDay == newday) {
              //   _node.getChildByName(`1`).color = new cc.Color(65,205,225);
@@ -104,7 +154,7 @@ cc.Class({
             var _node = this.node.getChildByName('days').getChildByName(`button${idx}`);
 
 
-            this.addOneDay( cc.p(80*number-330, 65 - num * 75 ), 0, i, true, i == newday )
+            this.addOneDay( cc.p(80*number-330, 65 - num * 75 ), 0, i, true, i == NOW_DAY )
 
            // if (i == newday) {
               //  _node.getChildByName(`1`).color = new cc.Color(65,205,225);
@@ -120,33 +170,28 @@ cc.Class({
 
 
             for (var i = number; i <=6; i++) {
-            	//var idx = number + num*7 + 1;
-           	 	//var _node = this.node.getChildByName('days').getChildByName(`button${idx}`);
-                //_node.getChildByName(`1`).color = new cc.Color(155,155,155);
-                //_node.getChildByName(`1`).getComponent(cc.Label).string = index++;
+            	cc.log("number:", number);
+            	cc.log("index:", index);
 
             	number++;
-                this.addOneDay( cc.p(80*number-330, -235 ), 0, index++, false )
+                this.addOneDay( cc.p(80*number-330, 65 - num * 75 ), 0, index++, false )
                 
             }
         }
-
-
-
-
     },
     addOneDay:function(p, type, num, isThisMonth, isToady = false)
     {
     	// 使用给定的模板在场景中生成一个新节点
         var day = cc.instantiate(this.Day);
         // 将新增的节点添加到 Canvas 节点下面
-        this.node.addChild(day);
-        // 为星星设置一个随机位置
+        this.node.getChildByName("days").addChild(day);
+
         day.setPosition( p );
 
         day.getComponent("DayButton").SetProperty(type, num, isThisMonth, isToady);
         day.getComponent("DayButton").MAIN = this;
-
+        //
+        this.DaysArr.push(day);
     },
 
     addImage:function(_path, _parent)

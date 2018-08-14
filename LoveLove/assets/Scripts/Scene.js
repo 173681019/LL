@@ -15,7 +15,7 @@ cc.Class({
     	homeUI:{
     		default: null,
             type: cc.Node
-    	}
+    	},
         // foo: {
         //     // ATTRIBUTES:
         //     default: null,        // The default value will be used only when the component attaching
@@ -53,8 +53,8 @@ cc.Class({
 
 
     start () {
-
     },
 
+    
     // update (dt) {},
 });

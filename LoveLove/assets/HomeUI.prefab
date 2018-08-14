@@ -808,7 +808,10 @@
     "node": {
       "__id__": 1
     },
-    "_enabled": true
+    "_enabled": true,
+    "Calendar": {
+      "__uuid__": "5c8c4b55-bb3b-4ae5-9ee1-4e0f8cc33909"
+    }
   },
   {
     "__type__": "cc.PrefabInfo",

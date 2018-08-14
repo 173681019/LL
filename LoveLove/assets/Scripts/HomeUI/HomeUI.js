@@ -12,6 +12,11 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+
+        Calendar:{
+            default: null,
+            type: cc.Prefab
+        },
         // foo: {
         //     // ATTRIBUTES:
         //     default: null,        // The default value will be used only when the component attaching
@@ -32,7 +37,7 @@ cc.Class({
     // LIFE-CYCLE CALLBACKS:
 
    removeMe(){
-         this.node.destroy();
+        this.node.destroy();
     },
          
     onLoad () {
@@ -40,6 +45,10 @@ cc.Class({
 
     start () {
 
+        var calendar = cc.instantiate(this.Calendar);
+        this.node.addChild(calendar);
+        calendar.setPosition(cc.p(0, -285))
+        calendar.getComponent("CalendarUI").showBg(false);
     },
 
     // update (dt) {},
