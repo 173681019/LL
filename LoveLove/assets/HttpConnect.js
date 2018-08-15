@@ -27,7 +27,17 @@ cc.Class({
         //         this._bar = value;
         //     }
         // },
+        Token:{
+            get () {
+                return this._token;
+            },
+            set (value) {
+                this._token = value;
+            }
+        },
+        IP:"http://47.92.50.232/"
     },
+
 
     // LIFE-CYCLE CALLBACKS:
 
@@ -36,33 +46,94 @@ cc.Class({
 
     start () {
     	cc.log("connect start.......")
-    	this.sendPostRequest("", this.postResCallBack);
+        this.login();
+// this.sendPostRequest(
+// {
+//   "consume": 0,
+//   "nums": 0,
+//   "power": 0,
+//   "powerScore": 0,
+//   "shareTimes": 10,
+//   "times":10
+// }, "userData/saveOrModify", 
+// true,
+// this.postResCallBack);
+
+//     
+
+
+
+},
+
+
+    login(){
+        this.sendPostRequest({
+            "keyId": "微信用户001",
+            "platform": 1
+        }, "user/login", true, this.loginResult, this)
+    },
+    //
+    loginResult(arg, result){
+        console.log('登录成功:!!' + result.data)
+        arg.Token = result.data;
+
+        arg.sendMessage( "", "userData/data", false );
+    },
+
+
+    sendMessage( data, link, post ){
+        this.sendPostRequest(data, link, post, this.postResCallBack, this)
     },
 
     postResCallBack(result){
 
 		console.log('收到了返回消息:!!' + result)
+        console.log("result:", result.status)
+        console.log("data:", result.data)
     },
 
-	sendPostRequest(str,callback) 
+	sendPostRequest(str,link, post, callback, arg) 
     {
-		var sendstr=JSON.stringify(str);
+
 		var xhr = cc.loader.getXMLHttpRequest();
-		xhr.open("POST", "https://httpbin.org/post");
-		//xhr.open("GET", ServerLink+link+"?"+parm,false);
-		xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-		xhr.send(sendstr);
+		xhr.setRequestHeader("Content-Type","application/json");
+        if(this.Token){
+            xhr.setRequestHeader("X-Auth-Token",this.Token);
+        }
+
+
+
+        if(post){
+        console.log('发送消息POST')
+            var sendstr=JSON.stringify(str);
+            var linkStr = this.IP+link;
+            xhr.open("POST", linkStr);//x-www-form-urlencoded
+            xhr.send(sendstr);
+        }
+        else{
+        console.log('发送消息GET')
+            var linkStr = this.IP+link;
+            xhr.open("GET", linkStr);
+            xhr.send();
+        }
+        //
+        console.log("linkStr:", linkStr);
+        // new Uint8Array([]) 
 		xhr.onreadystatechange = function () 
 		{
 			if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status <= 207)) 
 			{
-				var result = JSON.parse(xhr.responseText);
-				//if(result["act"]=="erro")
-				//{
-				//	errcall(result["msg"]);
-				//	return;
-				//}
-				callback(result);
+                    console.log('收到了返回消息:1111111' + xhr.responseText) 
+                //
+                if(xhr.responseText=="OK")
+                {
+                    var result = JSON.parse(xhr.responseText);
+                
+                    callback(arg, result);
+                }
+                else
+                {
+                }
 			}
 		};
 
