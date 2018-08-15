@@ -1425,10 +1425,7 @@
       "__id__": 2
     },
     "_enabled": true,
-    "homeUI": null,
-    "Calendar": {
-      "__uuid__": "5c8c4b55-bb3b-4ae5-9ee1-4e0f8cc33909"
-    }
+    "homeUI": null
   },
   {
     "__type__": "efb704FGzlJT7pRfTXAIz2L",
@@ -1437,6 +1434,7 @@
     "node": {
       "__id__": 2
     },
-    "_enabled": true
+    "_enabled": true,
+    "IP": "http://47.92.50.232/"
   }
 ]

@@ -47,17 +47,7 @@ cc.Class({
     start () {
     	cc.log("connect start.......")
         this.login();
-// this.sendPostRequest(
-// {
-//   "consume": 0,
-//   "nums": 0,
-//   "power": 0,
-//   "powerScore": 0,
-//   "shareTimes": 10,
-//   "times":10
-// }, "userData/saveOrModify", 
-// true,
-// this.postResCallBack);
+
 
 //     
 
@@ -78,18 +68,22 @@ cc.Class({
         arg.Token = result.data;
 
         arg.sendMessage( "", "userData/data", false );
-    },
+
+//         arg.sendMessage( {
+//   "consume": 0,
+//   "nums": 0,
+//   "power": 0,
+//   "powerScore": 0,
+//   "shareTimes": 10,
+//   "times":10
+// }, "userData/saveOrModify", 
+// true, );
+
+     },
 
 
     sendMessage( data, link, post ){
         this.sendPostRequest(data, link, post, this.postResCallBack, this)
-    },
-
-    postResCallBack(result){
-
-		console.log('收到了返回消息:!!' + result)
-        console.log("result:", result.status)
-        console.log("data:", result.data)
     },
 
 	sendPostRequest(str,link, post, callback, arg) 
@@ -121,24 +115,38 @@ cc.Class({
         // new Uint8Array([]) 
 		xhr.onreadystatechange = function () 
 		{
-			if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status <= 207)) 
-			{
-                    console.log('收到了返回消息:1111111' + xhr.responseText) 
+		//	if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status <= 207)) 
+			//{
+                    console.log('收到了返回消息:' + xhr.responseText) 
+                var result = JSON.parse(xhr.responseText);
                 //
-                if(xhr.responseText=="OK")
+                //
+                if(result.status=="OK")
                 {
-                    var result = JSON.parse(xhr.responseText);
-                
+                    console.log("data:", result.data);
                     callback(arg, result);
                 }
                 else
                 {
                 }
-			}
+		//	}
 		};
 
 		console.log('sendPostRequest!!')
 	},
+
+
+
+    postResCallBack(arg, result){
+
+        console.log('收到了返回消息:!!' + result)
+        console.log("data:", result.data)
+        //
+        for(var i = 0; i < result.data.length; i++)
+        {
+            console.log("data[i]:", result.data[i].id)
+        }
+    },
 
     // update (dt) {},
 });
