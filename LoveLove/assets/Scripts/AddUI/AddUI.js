@@ -39,7 +39,7 @@ cc.Class({
         this.startCalcu();
 
 
-        window.HTTPCONNECT.UpLoadData(11, 22, 33, 44, 55, 66)
+      //  window.HTTPCONNECT.UpLoadData(11, 22, 33, 44, 55, 66)
     },
 
     startCalcu:function(){
@@ -123,11 +123,11 @@ cc.Class({
         	//判断结束逻辑
         	if(this.continueCountToEnd > 0)this.continueCountToEnd--;
         	//
-        	if(this.averageTotal<this.powerInStart/2)
+        	if(this.averageTotal<this.powerInStart)
         	{
         		this.continueCountToEnd+=3;
         		//
-        		if(this.continueCountToEnd>500)
+        		if(this.continueCountToEnd>5000)
         		{
         			this.FuckEnded();
         		}
@@ -161,11 +161,18 @@ cc.Class({
         {
             t+=this.totalPower[i];
         }
-        t = t/l;
+        t = Math.round(t/l*10);
 
-        log("时长：", this.fuckContinueFrame)
-        log("力度：", t)
-        log("峰值力度：", this.maxPower)
+        this.maxPower = Math.round(this.maxPower*10);
+        //
+        log("时长：" + this.fuckContinueFrame)
+        log("力度：" + t)
+        log("峰值力度：" +  this.maxPower)
+
+        var score = Math.pow(this.fuckContinueFrame, 0.1)/3600;
+        log("评分："+score)
+        //
+        window.HTTPCONNECT.UpLoadData(this.maxPower, 1, t, score, 5555, this.fuckContinueFrame)
     },
     //
     reset() {
