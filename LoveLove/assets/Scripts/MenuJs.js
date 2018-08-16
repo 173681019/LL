@@ -129,7 +129,10 @@ cc.Class({
     
     gc: function () {
         cc.sys.garbageCollect();
+    },
+    //
+    refreshCurrentBoard:function(){
+    	this.currentShowHud.getComponent("HomeUI").RefreshCalendar()
     }
-
     // update (dt) {},
 });

@@ -48,8 +48,16 @@ cc.Class({
         var calendar = cc.instantiate(this.Calendar);
         this.node.addChild(calendar);
         calendar.setPosition(cc.p(0, -285))
-        calendar.getComponent("CalendarUI").showBg(false);
+        this.calendarCode = calendar.getComponent("CalendarUI")
+        this.calendarCode.showBg(false);
+        console.log("1231233sdasdas", this.calendarCode)
     },
+    //
+    RefreshCalendar()
+    {
+        console.log("刷新日历", this.calendarCode)
+        this.calendarCode.showDefaultData()
+    }
 
     // update (dt) {},
 });

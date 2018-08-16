@@ -46,16 +46,20 @@ cc.Class({
 
 
 
-    	var date = new Date()
+
+
+
+
+    },
+    //
+    showDefaultData()
+    {
+        var date = new Date()
         this.currentYear = date.getFullYear();
         this.currentMonth = date.getMonth();
         var newday = date.getDate();
 
         this.initBoard(this.currentYear, this.currentMonth, newday);
-
-
-
-
     },
     //
     showBg:function(show)
@@ -98,6 +102,10 @@ cc.Class({
 
     initBoard:function( NOW_YEAR, NOW_MONTH, NOW_DAY )
     {
+        console.log("windowdata", window[NOW_YEAR+"_"+NOW_MONTH])
+
+
+
     	// 获取这月有多少天
         var currentDay = this.getMonthsDay( NOW_YEAR, NOW_MONTH );
 

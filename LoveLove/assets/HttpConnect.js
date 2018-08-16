@@ -7,7 +7,7 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
-
+const IP = "http://47.92.50.232/"
 cc.Class({
     extends: cc.Component,
 
@@ -35,7 +35,7 @@ cc.Class({
                 this._token = value;
             }
         },
-        IP:"http://47.92.50.232/"
+        
     },
 
 
@@ -59,28 +59,10 @@ cc.Class({
     login(){
         this.sendPostRequest({
             "keyId": "微信用户001",
-            "platform": 1
-        }, "user/login", true, this.loginResult, this)
+            "platform": 1,
+            "remark":{name:"LOGIN"}
+        }, "user/login", true, this.postResCallBack, this)
     },
-    //
-    loginResult(arg, result){
-        console.log('登录成功:!!' + result.data)
-        arg.Token = result.data;
-
-        arg.sendMessage( "", "userData/data", false );
-
-//         arg.sendMessage( {
-//   "consume": 0,
-//   "nums": 0,
-//   "power": 0,
-//   "powerScore": 0,
-//   "shareTimes": 10,
-//   "times":10
-// }, "userData/saveOrModify", 
-// true, );
-
-     },
-
 
     sendMessage( data, link, post ){
         this.sendPostRequest(data, link, post, this.postResCallBack, this)
@@ -98,15 +80,15 @@ cc.Class({
 
 
         if(post){
-        console.log('发送消息POST')
+            console.log('发送消息POST')
             var sendstr=JSON.stringify(str);
-            var linkStr = this.IP+link;
+            var linkStr = IP+link;
             xhr.open("POST", linkStr);//x-www-form-urlencoded
             xhr.send(sendstr);
         }
         else{
-        console.log('发送消息GET')
-            var linkStr = this.IP+link;
+            console.log('发送消息GET')
+            var linkStr = IP+link;
             xhr.open("GET", linkStr);
             xhr.send();
         }
@@ -117,18 +99,19 @@ cc.Class({
 		{
 		//	if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status <= 207)) 
 			//{
-                    console.log('收到了返回消息:' + xhr.responseText) 
-                var result = JSON.parse(xhr.responseText);
-                //
-                //
-                if(result.status=="OK")
-                {
-                    console.log("data:", result.data);
-                    callback(arg, result);
-                }
-                else
-                {
-                }
+            console.log('收到了返回消息:' + xhr.responseText) 
+            var result = JSON.parse(xhr.responseText);
+            //
+            //
+            if(result.status=="OK")
+            {
+                console.log("data:", result.data);
+                callback(arg, result);
+            }
+            else
+            {
+                console.log("网络状况！")
+            }
 		//	}
 		};
 
@@ -142,11 +125,70 @@ cc.Class({
         console.log('收到了返回消息:!!' + result)
         console.log("data:", result.data)
         //
-        for(var i = 0; i < result.data.length; i++)
+        console.log("result.remark.name:",result.remark.name);
+        switch(result.remark.name)
         {
-            console.log("data[i]:", result.data[i].id)
+            case "LOGIN":
+                console.log('登录成功:!!' + result.data)
+                arg.Token = result.data;
+
+                var date = new Date()
+                arg.getMonthData(date.getFullYear(), date.getMonth()+1);
+                break;
+            case "ALLDATA":
+                break;
+
+            case "YEARDATA":
+                break;
+
+            case "MONTHDATA":
+                if(result.data.length>0)
+                {
+                    var varName = result.data[0].year + "_" + (result.data[0].month-1);
+                    //
+                    console.log("varName:", varName);
+                    window[varName] = result.data;
+                    //
+                    window.Main.loginOkAndGotData();
+                }
+                // for(var i = 0; i < result.data.length; i++)
+                // {
+                //     console.log("data[i]:", result.data[i].id)
+                // }
+
+                //arg.UpLoadData(1, 2, 3, 4, 5, 6);
+                break;
+            case "DAYDATA":
+                break;
+            case "UPLOAD":
+                console.log("上传成功！！！")
+                break;
+
         }
     },
 
+    getDayData(y, m, d){
+        this.sendMessage( {year:y, month:m, "remark":{"name":"DAYDATA"}}, "userData/data", true );
+    },
+    getMonthData(y, m){
+        this.sendMessage( {year:y, month:m, "remark":{"name":"MONTHDATA"}}, "userData/data", true );
+    },
+    getYearData(y){
+        this.sendMessage( {year:y, "remark":{"name":"YEARDATA"}}, "userData/data", true );
+    },
+    getAllData(){
+        this.sendMessage( {"remark":{"name":"ALLDATA"}}, "userData/data", true );
+    },
     // update (dt) {},
+
+    UpLoadData( consume, nums, power, pwoerScore, shareTimes, times){
+        this.sendMessage( {"consume": consume,
+                              "nums": nums,
+                              "power": power,
+                              "powerScore": pwoerScore,
+                              "shareTimes": shareTimes,
+                              "times": times,
+                              "remark": {name:"UPLOAD"}}, "userData/saveOrModify", true );
+        
+    }
 });

@@ -1425,7 +1425,9 @@
       "__id__": 2
     },
     "_enabled": true,
-    "homeUI": null
+    "Menu": {
+      "__id__": 8
+    }
   },
   {
     "__type__": "efb704FGzlJT7pRfTXAIz2L",
@@ -1434,7 +1436,6 @@
     "node": {
       "__id__": 2
     },
-    "_enabled": true,
-    "IP": "http://47.92.50.232/"
+    "_enabled": true
   }
 ]

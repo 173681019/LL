@@ -12,7 +12,7 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-    	homeUI:{
+    	Menu:{
     		default: null,
             type: cc.Node
     	},
@@ -40,6 +40,7 @@ cc.Class({
 	    cc.systemEvent.setAccelerometerEnabled(true);
         cc.systemEvent.on(cc.SystemEvent.EventType.DEVICEMOTION, this.onDeviceMotionEvent, this);
 
+        window.Main = this;
 
     },
 
@@ -54,7 +55,13 @@ cc.Class({
 
     start () {
     },
-
+    //
+    loginOkAndGotData()
+    {
+        cc.log("登录成功并且拿到了月数据")
+        //this.Menu.getComponent("MenuJs").HomeUI
+        this.Menu.getComponent("MenuJs").refreshCurrentBoard();
+    }
     
     // update (dt) {},
 });
