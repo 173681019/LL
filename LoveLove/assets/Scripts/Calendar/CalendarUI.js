@@ -102,10 +102,11 @@ cc.Class({
 
     initBoard:function( NOW_YEAR, NOW_MONTH, NOW_DAY )
     {
-        console.log("windowdata", window[NOW_YEAR+"_"+NOW_MONTH])
+        console.log("NOW_YE_MONTH:", NOW_YEAR+"_"+NOW_MONTH);
+        //
+        var _data = window[NOW_YEAR+"_"+NOW_MONTH];
 
-
-
+       
     	// 获取这月有多少天
         var currentDay = this.getMonthsDay( NOW_YEAR, NOW_MONTH );
 
@@ -133,12 +134,15 @@ cc.Class({
             this.addOneDay( cc.p(80*i-330, 60), 0, newlastDay--, false, false )
         }
 
-
+        var hasData = 0;
 		var newCurrentDay = 1;
         for (var i = firstDay+1; i <= 7; i++) {
             var _node = this.node.getChildByName('days').getChildByName(`button${i}`);
             var isToday = newCurrentDay == NOW_DAY;
-            this.addOneDay( cc.p(80*i-330, 60), 1, newCurrentDay++, true, isToday )
+
+            if(window[NOW_YEAR+"_"+NOW_MONTH+"_"+newCurrentDay]){hasData = 1;}else{hasData = 0;}
+                
+            this.addOneDay( cc.p(80*i-330, 60), hasData, newCurrentDay++, true, isToday )
             //if (newCurrentDay == newday) {
              //   _node.getChildByName(`1`).color = new cc.Color(65,205,225);
            // }
@@ -162,14 +166,10 @@ cc.Class({
             var _node = this.node.getChildByName('days').getChildByName(`button${idx}`);
 
 
-            this.addOneDay( cc.p(80*number-330, 65 - num * 75 ), 0, i, true, i == NOW_DAY )
+            if(window[NOW_YEAR+"_"+NOW_MONTH+"_"+i]){hasData = 1;}else{hasData = 0;}
+            this.addOneDay( cc.p(80*number-330, 65 - num * 75 ), hasData, i, true, i == NOW_DAY )
 
-           // if (i == newday) {
-              //  _node.getChildByName(`1`).color = new cc.Color(65,205,225);
-
-			
-          //  }
-           // _node.getChildByName(`1`).getComponent(cc.Label).string = i;
+          
         }
 
 

@@ -37,6 +37,9 @@ cc.Class({
         this.reset();
         this.fuckStart = false;
         this.startCalcu();
+
+
+        window.HTTPCONNECT.UpLoadData(11, 22, 33, 44, 55, 66)
     },
 
     startCalcu:function(){
@@ -71,12 +74,16 @@ cc.Class({
         this.totalValueY.push(this.deltaY);
         this.totalValueZ.push(this.deltaZ);
         //
+      //  cc.log("this.fuckStart ", this.fuckStart)
         if(this.fuckStart)
         {
         	this.fuckContinueFrame++;
         	if(this.fuckContinueFrame%100==0)
         	{
+
+                this.powerInStart = 2;
         		this.totalPower.push(this.averageTotal)
+                 log("this.averageTotal"+this.averageTotal)
         	}
         	//超过 this.averageValue 后开始记录
         	if(++this.count > this.averageValue)
@@ -86,6 +93,8 @@ cc.Class({
         		this.averageZ = this.totalZ/this.averageValue;
         		//
         		this.averageTotal = this.averageX + this.averageY + this.averageZ;
+
+              
         		//
         		if(this.maxPower < this.averageTotal)
         		{
@@ -130,7 +139,7 @@ cc.Class({
         this.prevY = accelX;
         this.prevZ = accelX;
         //
-        log("totalX:" + this.totalX + "totalY" + this.totalY + "totalZ" + this.totalZ);
+        //log("totalX:" + this.totalX + "totalY" + this.totalY + "totalZ" + this.totalZ);
     },
 
 
@@ -140,6 +149,23 @@ cc.Class({
         this.fuckStart = false;
         cc.systemEvent.setAccelerometerEnabled(false);
         this.stopCalcu();
+        this.getResult();
+        this.reset();
+    },
+    //
+    getResult(){
+
+        var t = 0;
+        var l = this.totalPower.length;
+        for(var i = 0; i < l; i++)
+        {
+            t+=this.totalPower[i];
+        }
+        t = t/l;
+
+        log("时长：", this.fuckContinueFrame)
+        log("力度：", t)
+        log("峰值力度：", this.maxPower)
     },
     //
     reset() {

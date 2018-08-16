@@ -8,6 +8,21 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 const IP = "http://47.92.50.232/"
+const PLATFORM_WEIXIN = 1;
+
+// Simulator: "id" : 18,
+// Simulator: "year" : 2018,
+// Simulator: "month" : 8,
+// Simulator: "day" : 16,
+// Simulator: "userId" : 5,
+// Simulator: "weekday" : 4,
+// Simulator: "nums" : 2,
+// Simulator: "times" : 6,
+// Simulator: "consume" : 1,
+// Simulator: "shareTimes" : 5,
+// Simulator: "power" : 3,
+// Simulator: "powerScore" : 4
+
 cc.Class({
     extends: cc.Component,
 
@@ -45,21 +60,16 @@ cc.Class({
     },
 
     start () {
+    	window.HTTPCONNECT = this;
     	cc.log("connect start.......")
         this.login();
-
-
-//     
-
-
-
-},
+    },
 
 
     login(){
         this.sendPostRequest({
             "keyId": "微信用户001",
-            "platform": 1,
+            "platform": PLATFORM_WEIXIN,
             "remark":{name:"LOGIN"}
         }, "user/login", true, this.postResCallBack, this)
     },
@@ -80,21 +90,19 @@ cc.Class({
 
 
         if(post){
-            console.log('发送消息POST')
+       //     console.log('发送消息POST')
             var sendstr=JSON.stringify(str);
             var linkStr = IP+link;
             xhr.open("POST", linkStr);//x-www-form-urlencoded
             xhr.send(sendstr);
         }
         else{
-            console.log('发送消息GET')
+        //    console.log('发送消息GET')
             var linkStr = IP+link;
             xhr.open("GET", linkStr);
             xhr.send();
         }
         //
-        console.log("linkStr:", linkStr);
-        // new Uint8Array([]) 
 		xhr.onreadystatechange = function () 
 		{
 		//	if (xhr.readyState == 4 && (xhr.status >= 200 && xhr.status <= 207)) 
@@ -123,9 +131,8 @@ cc.Class({
     postResCallBack(arg, result){
 
         console.log('收到了返回消息:!!' + result)
-        console.log("data:", result.data)
-        //
-        console.log("result.remark.name:",result.remark.name);
+
+
         switch(result.remark.name)
         {
             case "LOGIN":
@@ -149,6 +156,16 @@ cc.Class({
                     console.log("varName:", varName);
                     window[varName] = result.data;
                     //
+                    for(var i = 0; i < result.data.length; i++)
+			        {
+			        	if(!window[varName + "_" + result.data[i].day])
+			        	{
+			        		window[varName + "_" + result.data[i].day] = []
+			        	}
+			            //console.log( _data[i].day );
+			            window[varName + "_" + result.data[i].day].push(result.data[i]);
+			        }
+
                     window.Main.loginOkAndGotData();
                 }
                 // for(var i = 0; i < result.data.length; i++)
